@@ -1,0 +1,128 @@
+import 'package:flutter/material.dart';
+ 
+void main() => runApp(MyApp());
+ 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Candra Saragih (5sia1)'),
+        ),
+        body: MyList(),
+      ),
+    );
+  }
+}
+
+class MyList extends StatefulWidget {
+  @override
+  _MyListState createState() => _MyListState();
+}
+
+class _MyListState extends State<MyList> {
+  final List<Mahasiswa> mhs = MahasiswaList.getMahasiswa();
+
+  Widget build(BuildContext context) {
+    return Container(
+      child: mhs.length > 0
+          ? ListView.builder(
+              itemCount: mhs.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                  onDismissed: (DismissDirection direction) {
+                    setState(() {
+                      mhs.removeAt(index);
+                    });
+                  },
+                  secondaryBackground: Container(
+                    child: Center(
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    color: Colors.red,
+                  ),
+                  background: Container(),
+                  child: MahasiswaCard(mahasiswa: mhs[index]),
+                  key: UniqueKey(),
+                  direction: DismissDirection.endToStart,
+                );
+              },
+            )
+          : Center(child: Text('No Items')),
+    );
+  }
+}
+
+
+// Objek Model
+class Mahasiswa {
+  String namalengkap;
+  String jurusan;
+  String alamat;
+  String fotoURL;
+
+  Mahasiswa({this.namalengkap, this.alamat, this.jurusan, this.fotoURL});
+}
+
+// Objek Data
+class MahasiswaList {
+  static List<Mahasiswa> getMahasiswa(){
+    return [
+      Mahasiswa(
+        namalengkap: 'Candra Budiaman Saragih',
+        jurusan: 'Abal abal farm',
+        alamat: 'Medan',
+        fotoURL: 'https://lh3.googleusercontent.com/ogw/ADGmqu-MVSghJpUV8AFfVM5J2D8ca_GFo_opCa9B0klA=s83-c-mo',
+      ),
+      Mahasiswa(
+        namalengkap: 'Ikan Koki',
+        jurusan: 'Indra Pura Koki Farm',
+        alamat: 'Indra Pura',
+        fotoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSBJUYoHEEo93uOPb0GvP8rVMzaRX_XC3t9Iw&usqp=CAU',
+        
+         ),
+      Mahasiswa(
+        namalengkap: 'Ikan Koi',
+        jurusan: 'Aceh Koi Farm',
+        alamat: 'Aceh',
+        fotoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSoFkZtW229X5OKzqtVDRfxVhepeeo-PPR7IA&usqp=CAU',
+        
+         ),
+      Mahasiswa(
+        namalengkap: 'Ikan Jurung',
+        jurusan: 'Predator Farm',
+        alamat: 'Papua',
+        fotoURL: 'https://www.pikiranmerdeka.co/wp-content/uploads/2018/03/IMG-20180324-WA0035.jpg',
+        
+      ),
+    ];
+  }
+}
+
+//Objek View 
+class MahasiswaCard extends StatelessWidget {
+  final Mahasiswa mahasiswa;
+  
+  MahasiswaCard({this.mahasiswa});
+
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            leading:  CircleAvatar(
+              backgroundImage: NetworkImage(mahasiswa.fotoURL),),
+            title:  Text(mahasiswa.namalengkap),
+            subtitle: Text(mahasiswa.jurusan),
+            trailing: Text(mahasiswa.alamat),
+          )
+        ],
+      ),
+    );
+  }
+}
